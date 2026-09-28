@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+<title>Garden Trail Explorers</title>
+
+<style>
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  --bg:#eaf6dc;
+  --card:#ffffff;
+  --ink:#23331f;
+  --green:#3e9b3a;
+  --sun:#ffc93c;
+  --berry:#e0475b;
+  --sky:#4aa3df;
+  --line:#cfe5b8
+}
+
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#17240f;
+    --card:#22331a;
+    --ink:#f1f8e6;
+    --line:#38512b
+  }
+}
+
+:root[data-theme="dark"]{
+  --bg:#17240f;
+  --card:#22331a;
+  --ink:#f1f8e6;
+  --line:#38512b
+}
+
+html{
+  scroll-padding-top:env(safe-area-inset-top,0px)
+}
+
+*,*:before,*:after{
+  box-sizing:inherit
+}
+
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:"Fredoka","Baloo 2","Trebuchet MS",Verdana,sans-serif;
+  font-size:18px;
+  line-height:1.45
+}
+
+.wrap{
+  max-width:640px;
+  margin:0 auto;
+  padding:16px
+}
+
+h1{
+  font-size:2rem;
+  margin:.2em 0;
+  line-height:1.1
+}
+
+h2{
+  margin:.2em 0 .5em
+}
+
+.hero{
+  text-align:center;
+  padding:12px 0
+}
+
+.hero .big{
+  font-size:4rem
+}
+
+nav{
+  display:flex;
+  gap:8px;
+  margin:12px 0;
+  position:sticky;
+  top:env(safe-area-inset-top,0px);
+  background:var(--bg);
+  padding:8px 0;
+  z-index:2
+}
+
+nav button{
+  flex:1;
+  font:inherit;
+  font-weight:700;
+  padding:12px 4px;
+  border:3px solid var(--green);
+  background:var(--card);
+  color:var(--ink);
+  border-radius:16px;
+  cursor:pointer
+}
+
+nav button[aria-selected=true]{
+  background:var(--green);
+  color:#fff
+}
+
+button:focus-visible{
+  outline:4px solid var(--sky);
+  outline-offset:2px
+}
+
+.card{
+  background:var(--card);
+  border:3px solid var(--line);
+  border-radius:22px;
+  padding:18px;
+  margin:12px 0
+}
+
+.fact{
+  font-size:1.25rem;
+  min-height:5.5em
+}
+
+.emoji{
+  font-size:3.5rem;
+  display:block
+}
+
+.btn{
+  font:inherit;
+  font-weight:700;
+  border:0;
+  border-radius:16px;
+  padding:14px 20px;
+  background:var(--sun);
+  color:#3a2b00;
+  cursor:pointer;
+  margin:6px 6px 0 0
+}
+
+.btn.alt{
+  background:var(--sky);
+  color:#fff
+}
+
+.opt{
+  display:block;
+  width:100%;
+  text-align:left;
+  font:inherit;
+  font-size:1.1rem;
+  font-weight:600;
+  margin:8px 0;
+  padding:14px;
+  border-radius:16px;
+  border:3px solid var(--line);
+  background:var(--card);
+  color:var(--ink);
+  cursor:pointer
+}
+
+.opt.right{
+  background:#bfe8b0;
+  border-color:var(--green);
+  color:#173a12
+}
+
+.opt.wrong{
+  background:#ffc9cf;
+  border-color:var(--berry);
+  color:#5a0f1b
+}
+
+.msg{
+  font-weight:700;
+  min-height:1.6em;
+  margin-top:8px
+}
+
+.qa summary{
+  font-weight:700;
+  cursor:pointer;
+  padding:6px 0;
+  font-size:1.1rem
+}
+
+.qa p{
+  margin:.3em 0 .8em;
+  padding-left:8px;
+  border-left:5px solid var(--sun)
+}
+
+.bar{
+  height:14px;
+  background:var(--line);
+  border-radius:9px;
+  overflow:hidden
+}
+
+.bar i{
+  display:block;
+  height:100%;
+  background:var(--green);
+  width:0;
+  transition:width .3s
+}
+
+.stars{
+  font-size:2.4rem
+}
+
+[hidden]{
+  display:none!important
+}
+
+@media (prefers-reduced-motion:reduce){
+  *{
+    transition:none!important
+  }
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="wrap">
+
+  <div class="hero">
+    <span class="big" aria-hidden="true">🌻🐝🌳</span>
+    <h1>Garden Trail Explorers</h1>
+    <div>Scan, learn, and play!</div>
+  </div>
+
+  <nav role="tablist">
+
+    <button
+      role="tab"
+      aria-selected="true"
+      data-t="facts">
+      🔍 Facts
+    </button>
+
+    <button
+      role="tab"
+      aria-selected="false"
+      data-t="qa">
+      💬 Q&amp;A
+    </button>
+
+    <button
+      role="tab"
+      aria-selected="false"
+      data-t="quiz">
+      ⭐ Quiz
+    </button>
+
+  </nav>
+
+  <section id="facts">
+
+    <div class="card">
+
+      <span class="emoji" id="fe">🐝</span>
+
+      <p class="fact" id="ft"></p>
+
+      <button class="btn" id="fn">
+        Next fact
+      </button>
+
+      <button class="btn alt" id="fr">
+        Surprise me
+      </button>
+
+      <div class="msg" id="fc"></div>
+
+    </div>
+
+  </section>
+
+
+  <section id="qa" hidden>
+
+    <div class="card qa">
+
+      <h2>Tap a question!</h2>
+
+      <div id="qal"></div>
+
+    </div>
+
+  </section>
+
+
+  <section id="quiz" hidden>
+
+    <div class="card">
+
+      <div class="bar" aria-hidden="true">
+        <i id="pb"></i>
+      </div>
+
+      <div id="qbox"></div>
+
+    </div>
+
+  </section>
+
+</div>
+
+
+<script>
+
+var facts = [
+
+  [
+    "🐝",
+    "A bee visits thousands of flowers to make just one spoon of honey."
+  ],
+
+  [
+    "🌻",
+    "Sunflowers turn their faces to follow the sun across the sky."
+  ],
+
+  [
+    "🌳",
+    "Trees drink water through their roots, like straws in the ground."
+  ],
+
+  [
+    "🐛",
+    "A caterpillar eats leaves, then turns into a butterfly!"
+  ],
+
+  [
+    "🌱",
+    "Plants make their own food using sunlight. It's called photosynthesis."
+  ],
+
+  [
+    "🐌",
+    "A snail carries its house on its back. It is called a shell."
+  ],
+
+  [
+    "🍎",
+    "Apples float in water because they are part air."
+  ],
+
+  [
+    "🐦",
+    "Birds have hollow bones, so they are light enough to fly."
+  ],
+
+  [
+    "🪱",
+    "Earthworms help gardens by making the soil soft and healthy."
+  ],
+
+  [
+    "🌈",
+    "Rainbows show up when sunshine meets raindrops."
+  ],
+
+  [
+    "💻",
+    "Coding means giving a computer step-by-step instructions."
+  ],
+
+  [
+    "📱",
+    "A QR code is a square picture that a phone camera can read."
+  ]
+
+];
+
+
+var qa = [
+
+  [
+    "Why do plants need water?",
+    "Water helps plants drink up food from the soil and stay strong and tall."
+  ],
+
+  [
+    "Why is the sky blue?",
+    "Sunlight has many colors. Blue light bounces around the sky the most, so we see blue."
+  ],
+
+  [
+    "What is a QR code?",
+    "It's a square picture made of tiny black and white dots. Your phone reads it like a secret message!"
+  ],
+
+  [
+    "What do bees do for flowers?",
+    "Bees carry pollen from flower to flower, and this helps plants make seeds and fruit."
+  ],
+
+  [
+    "What is a pattern?",
+    "A pattern is something that repeats, like red, blue, red, blue, red, blue."
+  ],
+
+  [
+    "What is coding?",
+    "Coding is writing clear steps so a computer knows what to do, like a recipe."
+  ],
+
+  [
+    "Why do leaves change color in fall?",
+    "Green fades away when there is less sunlight, and yellow, orange and red show up."
+  ],
+
+  [
+    "Why should we not litter in parks?",
+    "Trash can hurt animals and plants. A clean park is happy for everyone!"
+  ]
+
+];
+
+
+var quiz = [
+
+  [
+    "What do plants need to grow?",
+    "Sun, water and air",
+    [
+      "Candy only",
+      "Sun, water and air",
+      "Only toys"
+    ]
+  ],
+
+  [
+    "What color are most leaves?",
+    "Green",
+    [
+      "Green",
+      "Purple",
+      "Pink"
+    ]
+  ],
+
+  [
+    "Which animal makes honey?",
+    "Bee",
+    [
+      "Cow",
+      "Bee",
+      "Fish"
+    ]
+  ],
+
+  [
+    "What comes next? 🔴🔵🔴🔵🔴 ?",
+    "🔵",
+    [
+      "🔵",
+      "🟢",
+      "🔴"
+    ]
+  ],
+
+  [
+    "How many legs does a spider have?",
+    "8",
+    [
+      "4",
+      "6",
+      "8"
+    ]
+  ],
+
+  [
+    "A caterpillar becomes a...",
+    "Butterfly",
+    [
+      "Frog",
+      "Butterfly",
+      "Bird"
+    ]
+  ],
+
+  [
+    "What does a computer follow?",
+    "Instructions",
+    [
+      "Instructions",
+      "Dreams",
+      "Songs"
+    ]
+  ],
+
+  [
+    "Which one is a fruit?",
+    "Apple",
+    [
+      "Carrot",
+      "Apple",
+      "Potato"
+    ]
+  ]
+
+];
+
+
+function $(i){
+  return document.getElementById(i);
+}
+
+
+var tabs = document.querySelectorAll("nav button");
+
+
+tabs.forEach(function(b){
+
+  b.onclick = function(){
+
+    tabs.forEach(function(x){
+      x.setAttribute(
+        "aria-selected",
+        x === b
+      );
+    });
+
+    [
+      "facts",
+      "qa",
+      "quiz"
+    ].forEach(function(s){
+
+      $(s).hidden = (
+        s !== b.dataset.t
+      );
+
+    });
+
+  };
+
+});
+
+
+var fi = 0;
+var seen = {};
+
+
+function showFact(){
+
+  $("fe").textContent =
+    facts[fi][0];
+
+  $("ft").textContent =
+    facts[fi][1];
+
+  seen[fi] = 1;
+
+  $("fc").textContent =
+    "Facts learned: "
+    + Object.keys(seen).length
+    + " of "
+    + facts.length;
+}
+
+
+$("fn").onclick = function(){
+
+  fi = (fi + 1) % facts.length;
+
+  showFact();
+
+};
+
+
+$("fr").onclick = function(){
+
+  fi = Math.floor(
+    Math.random() * facts.length
+  );
+
+  showFact();
+
+};
+
+
+showFact();
+
+
+$("qal").innerHTML = qa.map(
+  function(q){
+
+    return (
+      "<details>" +
+      "<summary>" +
+      q[0] +
+      "</summary>" +
+      "<p>" +
+      q[1] +
+      "</p>" +
+      "</details>"
+    );
+
+  }
+).join("");
+
+
+var qi = 0;
+var score = 0;
+var locked = false;
+
+
+function shuffle(a){
+
+  return a.slice().sort(
+    function(){
+      return Math.random() - 0.5;
+    }
+  );
+
+}
+
+
+function render(){
+
+  var box = $("qbox");
+
+
+  if(qi >= quiz.length){
+
+    var st =
+      score >= 7
+      ? "🌟🌟🌟"
+      : score >= 4
+      ? "🌟🌟"
+      : "🌟";
+
+
+    box.innerHTML =
+      "<h2>All done!</h2>" +
+      '<div class="stars">' +
+      st +
+      "</div>" +
+      "<p>You got " +
+      score +
+      " out of " +
+      quiz.length +
+      ".</p>" +
+      '<button class="btn" id="again">' +
+      "Play again" +
+      "</button>";
+
+
+    $("pb").style.width = "100%";
+
+
+    $("again").onclick = function(){
+
+      qi = 0;
+      score = 0;
+
+      render();
+
+    };
+
+
+    return;
+
+  }
+
+
+  var q = quiz[qi];
+
+
+  $("pb").style.width =
+    (qi / quiz.length * 100) + "%";
+
+
+  box.innerHTML =
+    "<p><b>Question " +
+    (qi + 1) +
+    " of " +
+    quiz.length +
+    "</b></p>" +
+
+    "<h2>" +
+    q[0] +
+    "</h2>" +
+
+    '<div id="opts"></div>' +
+
+    '<div class="msg" id="qm" aria-live="polite"></div>' +
+
+    '<button class="btn" id="nx" hidden>' +
+    "Next" +
+    "</button>";
+
+
+  locked = false;
+
+
+  shuffle(q[2]).forEach(function(o){
+
+    var b =
+      document.createElement("button");
+
+
+    b.className = "opt";
+
+    b.textContent = o;
+
+
+    b.onclick = function(){
+
+      if(locked){
+        return;
+      }
+
+
+      locked = true;
+
+
+      var ok = o === q[1];
+
+
+      if(ok){
+        score++;
+      }
+
+
+      b.classList.add(
+        ok ? "right" : "wrong"
+      );
+
+
+      if(!ok){
+
+        document
+          .querySelectorAll(".opt")
+          .forEach(function(x){
+
+            if(x.textContent === q[1]){
+              x.classList.add("right");
+            }
+
+          });
+
+      }
+
+
+      $("qm").textContent =
+        ok
+        ? "🎉 Great job!"
+        : "Nice try! The answer is "
+          + q[1]
+          + ".";
+
+
+      $("nx").hidden = false;
+
+
+      $("nx").textContent =
+        qi === quiz.length - 1
+        ? "See my stars"
+        : "Next";
+
+
+      $("nx").onclick = function(){
+
+        qi++;
+
+        render();
+
+      };
+
+    };
+
+
+    $("opts").appendChild(b);
+
+  });
+
+}
+
+
+render();
+
+</script>
+
+</body>
+</html>
